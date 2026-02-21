@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeTop50 | The Elite Viral Radar</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="light-mode">
+
+<div class="smooth-wrapper">
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+            </div>
+        </label>
+    </div>
+
+    <header class="main-header">
+        <h1 id="homeBtn" class="glitch-logo" title="Reset to Home">TUBE<span>TOP50</span></h1>
+        <div class="tagline">Real Data. Zero Bias. No Clout. 🔥</div>
+    </header>
+
+    <section id="hero" class="full-page-hero">
+        <div class="hero-text">
+		
+           <h2 class="reveal-text">SOCIAL<br><span class="red-glow">HEAT.</span></h2>
+<p>We analyze live YouTube data to find what's actually moving the needle.<br>
+We track the engagement that defines a <strong>viral hit</strong>.</p>
+
+
+            <div class="scroll-indicator" id="scrollTrigger">Explore Trends <i class="fas fa-arrow-down"></i></div>
+        </div>
+    </section>
+
+    <section class="stats-board">
+        <div class="stat-item">
+            <span class="stat-value">13</span>
+            <span class="stat-label">Regions Tracked</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">LIVE</span>
+            <span class="stat-label">API Connection</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">11</span>
+            <span class="stat-label">Categories</span>
+        </div>
+    </section>
+
+    <section id="searchZone" class="search-area">
+        <div class="glass-controls">
+            <div class="inputs">
+                <div class="input-box">
+                    <label>SELECT REGION</label>
+                    <select id="country">
+                        <option value="GLOBAL">🌎 Worldwide</option>
+                        <option value="US">🇺🇸 USA</option>
+                        <option value="GR">🇬🇷 Greece</option>
+                        <option value="GB">🇬🇧 UK</option>
+                        <option value="DE">🇩🇪 Germany</option>
+                        <option value="FR">🇫🇷 France</option>
+                        <option value="IT">🇮🇹 Italy</option>
+                        <option value="JP">🇯🇵 Japan</option>
+                        <option value="KR">🇰🇷 South Korea</option>
+                        <option value="IN">🇮🇳 India</option>
+                        <option value="BR">🇧🇷 Brazil</option>
+                        <option value="CA">🇨🇦 Canada</option>
+                        <option value="AU">🇦🇺 Australia</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>CONTENT TYPE</label>
+                    <select id="category">
+                        <option value="">All Categories</option>
+                        <option value="20">🎮 Gaming</option>
+                        <option value="10">🎵 Music</option>
+                        <option value="23">😂 Comedy</option>
+                        <option value="17">⚽ Sports</option>
+                        <option value="28">🔬 Tech</option>
+                        <option value="1">🎬 Movies</option>
+                        <option value="24">🎭 Entertainment</option>
+                        <option value="22">👤 Blogs</option>
+                        <option value="25">📰 News</option>
+                        <option value="27">📚 Education</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="fetchBtn" class="neon-button">SCAN FOR TRENDS</button>
+                <button id="jumpToElite" class="jump-btn" title="Jump to Top 10"><i class="fas fa-arrow-down"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <main class="content-container">
+        <div id="videoList" class="video-grid"></div>
+        
+        <section id="insightsSection" class="elite-panel" style="display: none;">
+            <div class="elite-header">
+                <h2>THE VIRAL TOP 10</h2>
+                <p>Calculated by Viral Energy (Likes + Comments per View).</p>
+            </div>
+            <div id="insightsContent">
+                </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>TubeTop50 © 2026 | Built for the Culture. ✌️</p>
+        
+        <div class="bmc-container" style="margin-top: 20px;">
+            <a href="https://www.buymeacoffee.com/tubetop50" target="_blank">
+                <img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" style="height: 50px !important; width: 180px !important; border-radius: 10px;">
+            </a>
+        </div>
+    </footer>
+</div>
+
+<button id="scrollTop" title="Back to Filters"><i class="fas fa-chevron-up"></i></button>
+
+<script data-name="BMC-Widget" 
+        data-cfasync="false" 
+        data-id="tubetop50" 
+        data-description="Support me on Buy me a coffee!" 
+        data-message="Loved the tool? Leave a comment with your tip!" 
+        data-color="#e63946" 
+        data-position="Right" 
+        data-x_margin="18" 
+        data-y_margin="18">
+</script>
+
+<script src="script.js"></script>
+
+</body>
+</html>

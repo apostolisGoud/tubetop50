@@ -1,0 +1,357 @@
+/* =========================================================
+   1. THEMES & VARIABLES
+   ========================================================= */
+:root {
+    --yt-red: #e63946;
+    --bg-color: #ffffff;
+    --card-bg: #f8f9fa;
+    --text-color: #1a1a1b;
+    --border-color: #e9ecef;
+    --glass-bg: rgba(0, 0, 0, 0.03);
+    --hero-grad: radial-gradient(circle at center, #fff0f0 0%, #ffffff 80%);
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode {
+    --yt-red: #ff4d4d;
+    --bg-color: #0f0f0f;
+    --card-bg: #1e1e1e;
+    --text-color: #f1f1f1;
+    --border-color: #2d2d2d;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --hero-grad: radial-gradient(circle at center, #1a0a0b 0%, #0f0f0f 80%);
+}
+
+/* =========================================================
+   2. GLOBAL RESET & ALIGNMENT
+   ========================================================= */
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Lexend', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    transition: 0.4s ease;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Κεντράρει τα πάντα οριζόντια */
+}
+
+.smooth-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* =========================================================
+   3. THEME TOGGLE
+   ========================================================= */
+.theme-switch-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 25px;
+    z-index: 10001;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.theme-switch input { display: none; }
+
+.slider {
+    background-color: #333;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    border-radius: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.slider:before {
+    background-color: white;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+input:checked + .slider { background-color: var(--yt-red); }
+input:checked + .slider:before { transform: translateX(26px); }
+
+/* =========================================================
+   4. HEADER & HERO (Perfectly Centered)
+   ========================================================= */
+.main-header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    padding: 15px 0;
+    text-align: center;
+    background: var(--bg-color);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.glitch-logo { font-size: 1.8rem; cursor: pointer; letter-spacing: 2px; }
+.glitch-logo span { color: var(--yt-red); font-weight: 800; }
+
+.full-page-hero {
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: var(--hero-grad);
+    padding: 0 20px;
+}
+
+.reveal-text {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+.red-glow { color: var(--yt-red); text-shadow: 0 0 15px rgba(255, 77, 77, 0.2); }
+
+.scroll-indicator { 
+    margin-top: 30px; 
+    color: var(--yt-red); 
+    font-weight: 800; 
+    cursor: pointer; 
+    animation: bounce 2s infinite; 
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+}
+
+/* =========================================================
+   5. STATS BOARD
+   ========================================================= */
+.stats-board {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(30px, 10vw, 80px);
+    padding: 60px 20px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stat-item { text-align: center; }
+.stat-value { font-size: 3rem; color: var(--yt-red); font-weight: 800; font-family: 'Space Grotesk'; display: block; }
+.stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.5; }
+
+/* =========================================================
+   6. COMMAND CENTER (Centered Inputs)
+   ========================================================= */
+.search-area { width: 100%; padding: 60px 20px; display: flex; justify-content: center; }
+
+.glass-controls {
+    width: 100%;
+    max-width: 850px;
+    padding: 40px;
+    border-radius: 40px;
+    background: var(--glass-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.inputs { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; }
+
+.input-box { flex: 1; min-width: 220px; text-align: left; display: flex; flex-direction: column; }
+.input-box label { font-size: 0.7rem; font-weight: 800; color: var(--yt-red); margin-bottom: 8px; margin-left: 5px; }
+
+select {
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+}
+
+.action-buttons { display: flex; gap: 10px; width: 100%; max-width: 500px; justify-content: center; }
+
+.neon-button {
+    flex: 1;
+    background: var(--yt-red);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 18px;
+    transition: 0.3s;
+}
+
+.neon-button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4); }
+
+.jump-btn {
+    background: var(--card-bg);
+    color: var(--yt-red);
+    border: 1px solid var(--border-color);
+    width: 58px;
+    height: 58px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+/* =========================================================
+   7. VIDEO GRID (Responsive Grid)
+   ========================================================= */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 1300px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: 25px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card:hover { transform: translateY(-10px); border-color: var(--yt-red); }
+
+.video-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+
+.rank-badge {
+    position: absolute;
+    top: 15px; left: 15px;
+    background: var(--yt-red);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-weight: 900;
+    font-family: 'Space Grotesk';
+}
+
+.card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+
+.watch-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border: 1px solid var(--yt-red);
+    color: var(--yt-red);
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.watch-btn:hover { background: var(--yt-red); color: white; }
+
+/* =========================================================
+   8. ELITE TOP 10 (High Quality List)
+   ========================================================= */
+.elite-panel {
+    width: 90%;
+    max-width: 1100px;
+    margin: 60px 0;
+    padding: 50px 20px;
+    background: var(--card-bg);
+    border-radius: 50px;
+    border: 1px solid var(--yt-red);
+    text-align: center;
+}
+
+.elite-thumb {
+    width: 180px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.elite-row {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 25px 0;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* =========================================================
+   9. RESPONSIVE DESIGN (Media Queries)
+   ========================================================= */
+@media (max-width: 768px) {
+    .stats-board { gap: 30px; }
+    .stat-value { font-size: 2rem; }
+    
+    .elite-row { flex-direction: column; text-align: center; gap: 15px; }
+    .elite-thumb { width: 100%; max-width: 300px; }
+    
+    .action-buttons { flex-direction: row; }
+    .glass-controls { padding: 20px; }
+}
+
+@media (max-width: 480px) {
+    .glitch-logo { font-size: 1.4rem; }
+    .reveal-text { font-size: 2.2rem; }
+    .neon-button { font-size: 0.9rem; }
+}
+
+/* =========================================================
+   10. UTILS
+   ========================================================= */
+#scrollTop {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--yt-red);
+    color: white;
+    border: none;
+    width: 55px; height: 55px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    z-index: 2000;
+    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+}
+
+.main-footer { padding: 60px; opacity: 0.5; text-align: center; font-size: 0.8rem; }
