@@ -1,5 +1,3 @@
-const apiKey = 'AIzaSyBB8k9K_92LWJSttI1CgjkLJPpsSQVDdng';
-
 // --- THEME TOGGLE ---
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
 const currentTheme = localStorage.getItem('theme');
@@ -55,9 +53,9 @@ async function startScanning() {
     const region = document.getElementById('country').value;
     const cat = document.getElementById('category').value;
 
-    let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&maxResults=50&key=${apiKey}`;
-    if (region !== 'GLOBAL') url += `&regionCode=${region}`;
-    if (cat) url += `&videoCategoryId=${cat}`;
+    // ΝΕΟ URL: Χτυπάμε το δικό μας κρυφό αρχείο στο Netlify, ΟΧΙ το YouTube απευθείας!
+    let url = `/.netlify/functions/get-videos?region=${region}`;
+    if (cat) url += `&cat=${cat}`;
 
     try {
         const response = await fetch(url);
@@ -73,6 +71,7 @@ async function startScanning() {
 
     } catch (e) {
         list.innerHTML = '<h2 style="color:var(--yt-red); text-align:center; width:100%;">API LIMIT REACHED OR ERROR.</h2>';
+        console.error(e);
     }
 }
 
