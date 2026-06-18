@@ -41,6 +41,17 @@ document.getElementById('jumpToElite').onclick = () => {
         eliteSection.scrollIntoView({ behavior: 'smooth' });
     }
 };
+// Νέα συνάρτηση που μετατρέπει τον περίεργο χρόνο του YouTube (π.χ. PT1M15S) σε δευτερόλεπτα
+function parseDurationToSeconds(duration) {
+    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = (parseInt(match[1]) || 0);
+    const minutes = (parseInt(match[2]) || 0);
+    const seconds = (parseInt(match[3]) || 0);
+    return (hours * 3600) + (minutes * 60) + seconds;
+}
+
+
+
 
 // --- MAIN SCANNER ---
 async function startScanning() {
@@ -52,8 +63,8 @@ async function startScanning() {
 
     const region = document.getElementById('country').value;
     const cat = document.getElementById('category').value;
+    const format = document.getElementById('videoFormat').value; // Παίρνουμε το νέο φίλτρο
 
-    // ΝΕΟ URL: Χτυπάμε το δικό μας κρυφό αρχείο στο Netlify, ΟΧΙ το YouTube απευθείας!
     let url = `/.netlify/functions/get-videos?region=${region}`;
     if (cat) url += `&cat=${cat}`;
 
@@ -63,10 +74,22 @@ async function startScanning() {
         
         if (!data.items) throw new Error("No data found");
 
-        renderVideos(data.items);
-        renderEliteSuggestions(data.items);
+        // ΦΙΛΤΡΑΡΙΣΜΑ ΓΙΑ SHORTS / REGULAR
+        let finalVideos = data.items;
+        if (format === 'shorts') {
+            finalVideos = finalVideos.filter(v => parseDurationToSeconds(v.contentDetails.duration) <= 61);
+        } else if (format === 'regular') {
+            finalVideos = finalVideos.filter(v => parseDurationToSeconds(v.contentDetails.duration) > 61);
+        }
+
+        if (finalVideos.length === 0) {
+            list.innerHTML = '<h2 style="text-align:center; width:100%;">Δεν βρέθηκαν βίντεο για αυτό το Format. Δοκίμασε άλλη κατηγορία.</h2>';
+            return;
+        }
+
+        renderVideos(finalVideos);
+        renderEliteSuggestions(finalVideos);
         
-        // Return to settings view after scan
         setTimeout(scrollToSettings, 400);
 
     } catch (e) {
@@ -74,6 +97,9 @@ async function startScanning() {
         console.error(e);
     }
 }
+
+
+
 
 function renderVideos(videos) {
     const list = document.getElementById('videoList');
@@ -115,7 +141,15 @@ function renderEliteSuggestions(videos) {
         return scoreB - scoreA;
     }).slice(0, 10);
 
-    content.innerHTML = elite.map((v, i) => `
+    content.innerHTML = elite.map((v, i) => {
+        // Κώδικας για τα Share Buttons
+        const shareText = encodeURIComponent(`The #${i+1} Most Viral Video right now is "${v.snippet.title}"! 🔥\n\nTracked via @TubeTop50\n`);
+        const videoUrl = encodeURIComponent(`https://youtube.com/watch?v=${v.id}`);
+        const twitterShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${videoUrl}`;
+        const fbShare = `https://www.facebook.com/sharer/sharer.php?u=${videoUrl}`;
+        const whatsappShare = `https://api.whatsapp.com/send?text=${shareText} ${videoUrl}`;
+
+        return `
         <div style="padding:20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; flex-wrap:wrap; gap:25px; text-align:left;">
             <span style="font-size:2.5rem; font-family:'Space Grotesk'; color:var(--yt-red); min-width:50px;">#${i+1}</span>
             <img src="${v.snippet.thumbnails.default.url}" style="width:120px; border-radius:12px; border:1px solid var(--border-color);">
@@ -124,13 +158,21 @@ function renderEliteSuggestions(videos) {
                     ${v.snippet.title}
                 </span>
                 <p style="margin:5px 0 0 0; opacity:0.6; font-size:0.9rem;">Creator: ${v.snippet.channelTitle}</p>
+                
+                <!-- ΤΑ ΝΕΑ SHARE BUTTONS -->
+                <div class="share-area">
+                    <span style="font-size: 0.75rem; font-weight:800; opacity: 0.6; margin-right: 10px;">SHARE VIRAL HIT:</span>
+                    <a href="${twitterShare}" target="_blank" class="social-share-btn x-tw"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="${fbShare}" target="_blank" class="social-share-btn fb"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="${whatsappShare}" target="_blank" class="social-share-btn wa"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
             </div>
             <div style="display:flex; gap:12px;">
                 <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn" style="background:var(--yt-red); color:white; border:none; padding:12px 25px;">PLAY</a>
-                <a href="https://youtube.com/channel/${v.snippet.channelId}" target="_blank" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color); padding:12px 25px;">VISIT</a>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 document.getElementById('fetchBtn').onclick = startScanning;
