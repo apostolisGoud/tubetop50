@@ -1,58 +1,54 @@
-// Αρχείο: netlify/functions/analyze-ad.js
-
 exports.handler = async function(event, context) {
-    // 1. Διασφαλίζουμε ότι η κλήση είναι POST
-    if (event.httpMethod !== "POST") {
-        return { statusCode: 405, body: "Method Not Allowed" };
+    // 1. Παίρνουμε το API key από το Netlify
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    
+    // 2. Εκτύπωση για τα Logs του Netlify (για να ξέρουμε αν το βρήκε)
+    console.log("Έλεγχος API Key - Υπάρχει;", !!apiKey);
+
+    // Αν δεν υπάρχει κλειδί, σταματάμε αμέσως!
+    if (!apiKey) {
+        console.error("ΛΕΙΠΕΙ ΤΟ API KEY! Έλεγξε τα Environment Variables.");
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Missing API Key" })
+        };
     }
 
-    // 2. Παίρνουμε το Gemini API Key από το Netlify
-    const apiKey = process.env.GEMINI_API_KEY;
+    // 3. Διαβάζουμε τις παραμέτρους
+    const region = event.queryStringParameters.region || 'GLOBAL';
+    const cat = event.queryStringParameters.cat || '';
+
+    // 4. Χτίζουμε το URL του YouTube API
+    let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&maxResults=50&key=${apiKey}`;
+    
+    if (region !== 'GLOBAL') url += `&regionCode=${region}`;
+    if (cat) url += `&videoCategoryId=${cat}`;
 
     try {
-        // 3. Διαβάζουμε το URL που μας έστειλε το script.js
-        const body = JSON.parse(event.body);
-        const url = body.url;
-
-        if (!url) {
-            return { statusCode: 400, body: JSON.stringify({ error: "URL is required" }) };
-        }
-
-        // 4. Εδώ βάζουμε το prompt! Έτσι κανείς δεν μπορεί να το αλλάξει από τον browser.
-        const prompt = `Ανάλυσε την αγγελία: ${url}. 
-        Εστίασε στην τιμή (αν είναι scam ή ευκαιρία), στα θετικά και αρνητικά.
-        Απάντησε ΑΥΣΤΗΡΑ σε μορφή JSON:
-        {
-          "safe_score": αριθμός 0-100,
-          "price_status": "π.χ. ΥΠΟΠΤΑ ΧΑΜΗΛΗ",
-          "pros": "κείμενο",
-          "cons": "κείμενο",
-          "verdict": "πόρισμα για αγορά"
-        }`;
-
-        // 5. Κάνουμε την κλήση στο Gemini API
-        const fetchUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
-        const response = await fetch(fetchUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-
-        if (!response.ok) throw new Error("Gemini API Error");
-
+        const response = await fetch(url);
         const data = await response.json();
-
-        // 6. Στέλνουμε την απάντηση πίσω στο frontend σου
+        
+        // 5. Έλεγχος αν το YouTube μάς έκοψε (π.χ. λάθος κλειδί, όρια κλπ)
+        if (!response.ok) {
+            console.error("ΣΦΑΛΜΑ ΑΠΟ YOUTUBE:", data);
+            return {
+                statusCode: response.status, // Επιστρέφει το 403 ή 400 του YouTube
+                body: JSON.stringify({ error: "YouTube API Error", details: data })
+            };
+        }
+        
+        // 6. Όλα τέλεια, στέλνουμε τα δεδομένα στη σελίδα
         return {
             statusCode: 200,
             body: JSON.stringify(data)
         };
 
     } catch (error) {
+        // 7. Αν σκάσει η ίδια η πλατφόρμα (π.χ. θέμα με την έκδοση Node)
+        console.error("ΣΦΑΛΜΑ ΣΥΣΤΗΜΑΤΟΣ:", error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed analyzing the ad' })
+            body: JSON.stringify({ error: 'System Error, check Netlify Logs' })
         };
     }
 }
