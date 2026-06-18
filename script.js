@@ -142,12 +142,8 @@ function renderEliteSuggestions(videos) {
     }).slice(0, 10);
 
     content.innerHTML = elite.map((v, i) => {
-        // Κώδικας για τα Share Buttons
-        const shareText = encodeURIComponent(`The #${i+1} Most Viral Video right now is "${v.snippet.title}"! 🔥\n\nTracked via @TubeTop50\n`);
-        const videoUrl = encodeURIComponent(`https://youtube.com/watch?v=${v.id}`);
-        const twitterShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${videoUrl}`;
-        const fbShare = `https://www.facebook.com/sharer/sharer.php?u=${videoUrl}`;
-        const whatsappShare = `https://api.whatsapp.com/send?text=${shareText} ${videoUrl}`;
+        // Καθαρίζουμε τον τίτλο από μονά εισαγωγικά για να μην "σπάσει" τον κώδικα του Share
+        const safeTitle = v.snippet.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
         return `
         <div style="padding:20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; flex-wrap:wrap; gap:25px; text-align:left;">
@@ -158,17 +154,17 @@ function renderEliteSuggestions(videos) {
                     ${v.snippet.title}
                 </span>
                 <p style="margin:5px 0 0 0; opacity:0.6; font-size:0.9rem;">Creator: ${v.snippet.channelTitle}</p>
-                
-                <!-- ΤΑ ΝΕΑ SHARE BUTTONS -->
-                <div class="share-area">
-                    <span style="font-size: 0.75rem; font-weight:800; opacity: 0.6; margin-right: 10px;">SHARE VIRAL HIT:</span>
-                    <a href="${twitterShare}" target="_blank" class="social-share-btn x-tw"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="${fbShare}" target="_blank" class="social-share-btn fb"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="${whatsappShare}" target="_blank" class="social-share-btn wa"><i class="fa-brands fa-whatsapp"></i></a>
-                </div>
             </div>
-            <div style="display:flex; gap:12px;">
-                <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn" style="background:var(--yt-red); color:white; border:none; padding:12px 25px;">PLAY</a>
+            
+            <!-- ΚΟΥΜΠΙΑ PLAY & SHARE -->
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn" style="background:var(--yt-red); color:white; border:none; padding:12px 25px; text-transform:uppercase;">
+                    <i class="fas fa-play"></i> PLAY
+                </a>
+                
+                <button onclick="shareVideo('${safeTitle}', '${v.id}')" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color); background:transparent; padding:12px 25px; cursor:pointer; font-family:'Lexend', sans-serif; text-transform:uppercase;">
+                    <i class="fas fa-share-nodes"></i> SHARE
+                </button>
             </div>
         </div>
         `;
