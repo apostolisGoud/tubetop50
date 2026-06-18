@@ -442,3 +442,33 @@ select {
     transform: scale(1.08);
 }
 
+/* =========================================================
+   12. SOCIAL SHARE ICONS
+   ========================================================= */
+.social-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white !important;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 0.85rem;
+}
+
+.social-icon.x-tw { background: #000000; }
+.social-icon.fb { background: #1877F2; }
+.social-icon.wa { background: #25D366; }
+
+.social-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Για να φαίνεται το X(Twitter) σε Dark Mode */
+body.dark-mode .social-icon.x-tw {
+    background: #ffffff;
+    color: #000000 !important;
+}

@@ -103,7 +103,15 @@ async function startScanning() {
 
 function renderVideos(videos) {
     const list = document.getElementById('videoList');
-    list.innerHTML = videos.map((v, index) => `
+    list.innerHTML = videos.map((v, index) => {
+        // Δημιουργία Links για Share
+        const shareText = encodeURIComponent(`Check out this viral hit: "${v.snippet.title}" 🔥\nTracked via @TubeTop50\n`);
+        const videoUrl = encodeURIComponent(`https://youtube.com/watch?v=${v.id}`);
+        const twitterShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${videoUrl}`;
+        const fbShare = `https://www.facebook.com/sharer/sharer.php?u=${videoUrl}`;
+        const whatsappShare = `https://api.whatsapp.com/send?text=${shareText} ${videoUrl}`;
+
+        return `
         <div class="video-card">
             <div class="rank-badge">#${index + 1}</div>
             <img src="${v.snippet.thumbnails.high.url}" alt="${v.snippet.title}">
@@ -114,20 +122,32 @@ function renderVideos(videos) {
                 <p style="color:var(--text-color); opacity:0.6; font-size:0.8rem; margin-bottom:15px;">
                     Creator: ${v.snippet.channelTitle}
                 </p>
-                <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; flex-direction:column; gap:15px;">
+                    
+                    <!-- Views & Share Icons -->
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span style="color:var(--yt-red); font-weight:900;">🔥 ${Number(v.statistics.viewCount).toLocaleString()}</span>
+                        <div style="display:flex; gap:8px;">
+                            <a href="${twitterShare}" target="_blank" class="social-icon x-tw" title="Share to X"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="${fbShare}" target="_blank" class="social-icon fb" title="Share to Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="${whatsappShare}" target="_blank" class="social-icon wa" title="Share to WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Watch & Channel Buttons -->
+                    <div style="display:flex; gap:10px;">
                         <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn">
                             <i class="fas fa-play"></i> WATCH
                         </a>
+                        <a href="https://youtube.com/channel/${v.snippet.channelId}" target="_blank" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color);">
+                            <i class="fas fa-user"></i> CHANNEL
+                        </a>
                     </div>
-                    <a href="https://youtube.com/channel/${v.snippet.channelId}" target="_blank" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color); text-align:center;">
-                        <i class="fas fa-user"></i> CHANNEL
-                    </a>
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function renderEliteSuggestions(videos) {
@@ -142,8 +162,12 @@ function renderEliteSuggestions(videos) {
     }).slice(0, 10);
 
     content.innerHTML = elite.map((v, i) => {
-        // Καθαρίζουμε τον τίτλο από μονά εισαγωγικά για να μην "σπάσει" τον κώδικα του Share
-        const safeTitle = v.snippet.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        // Δημιουργία Links για Share
+        const shareText = encodeURIComponent(`The #${i+1} Most Viral Video right now is "${v.snippet.title}"! 🔥\nTracked via @TubeTop50\n`);
+        const videoUrl = encodeURIComponent(`https://youtube.com/watch?v=${v.id}`);
+        const twitterShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${videoUrl}`;
+        const fbShare = `https://www.facebook.com/sharer/sharer.php?u=${videoUrl}`;
+        const whatsappShare = `https://api.whatsapp.com/send?text=${shareText} ${videoUrl}`;
 
         return `
         <div style="padding:20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; flex-wrap:wrap; gap:25px; text-align:left;">
@@ -154,17 +178,22 @@ function renderEliteSuggestions(videos) {
                     ${v.snippet.title}
                 </span>
                 <p style="margin:5px 0 0 0; opacity:0.6; font-size:0.9rem;">Creator: ${v.snippet.channelTitle}</p>
-            </div>
-            
-            <!-- ΚΟΥΜΠΙΑ PLAY & SHARE -->
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn" style="background:var(--yt-red); color:white; border:none; padding:12px 25px; text-transform:uppercase;">
-                    <i class="fas fa-play"></i> PLAY
-                </a>
                 
-                <button onclick="shareVideo('${safeTitle}', '${v.id}')" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color); background:transparent; padding:12px 25px; cursor:pointer; font-family:'Lexend', sans-serif; text-transform:uppercase;">
-                    <i class="fas fa-share-nodes"></i> SHARE
-                </button>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:15px;">
+                    <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn" style="background:var(--yt-red); color:white; border:none; padding:10px 20px; flex:none;">
+                        <i class="fas fa-play"></i> WATCH
+                    </a>
+                    <a href="https://youtube.com/channel/${v.snippet.channelId}" target="_blank" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color); padding:10px 20px; flex:none;">
+                        <i class="fas fa-user"></i> CHANNEL
+                    </a>
+                    
+                    <div style="display:flex; gap:8px; align-items:center; margin-left:10px;">
+                        <span style="font-size: 0.8rem; font-weight: 800; opacity: 0.5;">SHARE:</span>
+                        <a href="${twitterShare}" target="_blank" class="social-icon x-tw"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="${fbShare}" target="_blank" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="${whatsappShare}" target="_blank" class="social-icon wa"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
         `;
