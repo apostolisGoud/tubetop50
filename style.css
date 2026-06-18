@@ -175,7 +175,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 
 .glass-controls {
     width: 100%;
-    max-width: 850px;
+    max-width: 1000px;
     padding: 40px;
     border-radius: 40px;
     background: var(--glass-bg);
@@ -189,7 +189,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 
 .inputs { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; }
 
-.input-box { flex: 1; min-width: 220px; text-align: left; display: flex; flex-direction: column; }
+.input-box { flex: 1; min-width: 180px; text-align: left; display: flex; flex-direction: column; }
 .input-box label { font-size: 0.75rem; font-weight: 800; color: var(--yt-red); margin-bottom: 8px; margin-left: 5px; }
 
 select {
@@ -245,7 +245,6 @@ select {
 
 .video-grid {
     display: grid;
-    /* Η μαγεία του grid: Τουλάχιστον 280px το κάθε βίντεο, αλλιώς πιάνει όλο τον χώρο */
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
     padding: 40px 20px;
@@ -288,7 +287,6 @@ select {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 10px 15px;
     border: 1px solid var(--yt-red);
     color: var(--yt-red);
     border-radius: 12px;
@@ -296,10 +294,9 @@ select {
     font-weight: 800;
     font-size: 0.8rem;
     transition: 0.3s;
-    flex: 1;
 }
 
-.watch-btn:hover { background: var(--yt-red); color: white; }
+.watch-btn:hover { background: var(--yt-red); color: white !important; }
 
 /* =========================================================
    8. ELITE TOP 10
@@ -318,73 +315,73 @@ select {
 .elite-header p { opacity: 0.7; font-size: 0.9rem; margin-bottom: 30px; }
 
 /* =========================================================
-   9. RESPONSIVE DESIGN (ΤΑ ΜΑΓΙΚΑ ΓΙΑ ΚΙΝΗΤΑ/TABLET)
+   9. SOCIAL SHARE ICONS & MENU
    ========================================================= */
-
-/* Laptops & Tablets (1024px & κάτω) */
-@media (max-width: 1024px) {
-    .glass-controls { max-width: 90%; padding: 30px; }
-    .elite-panel { padding: 30px 20px; border-radius: 30px; }
-}
-
-/* Tablets Portrait & Μεγάλα Κινητά (768px & κάτω) */
-@media (max-width: 768px) {
-    .stats-board { flex-direction: column; gap: 30px; padding: 40px 20px; }
-    
-    .inputs { flex-direction: column; gap: 15px; }
-    .input-box { width: 100%; min-width: 100%; }
-    
-    .action-buttons { flex-direction: column; width: 100%; }
-    .jump-btn { width: 100%; height: 50px; font-size: 1.5rem; }
-    
-    .video-grid { gap: 20px; padding: 20px 15px; }
-}
-
-/* Μικρά Κινητά (480px & κάτω - π.χ. iPhone, Android) */
-@media (max-width: 480px) {
-    .theme-switch-wrapper { top: 12px; right: 15px; transform: scale(0.85); /* Μικραίνει λίγο το κουμπί του theme */ }
-    
-    .main-header { padding: 12px 0; }
-    .glitch-logo { font-size: 1.5rem; }
-    
-    .full-page-hero { min-height: 50vh; padding: 30px 15px; }
-    .reveal-text { font-size: 2.2rem; }
-    
-    .glass-controls { padding: 20px 15px; border-radius: 25px; }
-    .neon-button { padding: 15px; font-size: 1rem; }
-    
-    /* Αναγκάζει τα βίντεο να πιάνουν όλη την οθόνη ένα-ένα, χωρίς να κόβονται στα πλάγια */
-    .video-grid { grid-template-columns: 1fr; gap: 20px; padding: 20px 15px; }
-    
-    .card-body h4 { height: auto; margin-bottom: 10px; }
-    .watch-btn { font-size: 0.75rem; padding: 10px; }
-    
-    .elite-panel { width: 95%; padding: 20px 15px; border-radius: 20px; margin: 20px 0 60px 0;}
-    .elite-header h2 { font-size: 1.5rem; }
-}
-
-/* =========================================================
-   10. UTILS (Scroll Top & Footer)
-   ========================================================= */
-#scrollTop {
-    position: fixed;
-    bottom: 20px; right: 20px;
-    background: var(--yt-red);
-    color: white;
-    border: none;
-    width: 50px; height: 50px;
+.social-icon {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    cursor: pointer;
-    display: none;
-    z-index: 2000;
-    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white !important;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 0.9rem;
 }
 
-.main-footer { padding: 40px 20px; opacity: 0.7; text-align: center; font-size: 0.85rem; width: 100%; }
+.social-icon.x-tw { background: #000000; }
+.social-icon.fb { background: #1877F2; }
+.social-icon.wa { background: #25D366; }
+
+.social-icon:hover { transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+
+body.dark-mode .social-icon.x-tw { background: #ffffff; color: #000000 !important; }
+
+.share-container {
+    position: relative;
+    display: inline-block;
+}
+
+.share-menu {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 100;
+    gap: 10px;
+    flex-direction: row;
+}
+
+.share-menu::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--card-bg) transparent transparent transparent;
+}
+
+.share-menu.show {
+    display: flex;
+    animation: popUp 0.3s ease forwards;
+}
+
+@keyframes popUp {
+    from { opacity: 0; transform: translate(-50%, 15px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
 
 /* =========================================================
-   11. FOOTER & DONATE BUTTON
+   10. FOOTER & DONATE BUTTON
    ========================================================= */
 .main-footer { 
     padding: 60px 20px 30px; 
@@ -396,13 +393,8 @@ select {
     gap: 30px;
 }
 
-.footer-text { 
-    opacity: 0.5; 
-    font-size: 0.85rem; 
-    margin: 0; 
-}
+.footer-text { opacity: 0.5; font-size: 0.85rem; margin: 0; }
 
-/* Το νέο κουτί του Donate */
 .bmc-container {
     display: flex;
     flex-direction: column;
@@ -431,44 +423,78 @@ select {
     letter-spacing: 1.5px;
 }
 
-.bmc-button img {
-    height: 45px;
-    width: auto;
-    border-radius: 10px;
-    transition: 0.3s ease;
-}
+.bmc-button img { height: 45px; width: auto; border-radius: 10px; transition: 0.3s ease; }
+.bmc-button:hover img { transform: scale(1.08); }
 
-.bmc-button:hover img {
-    transform: scale(1.08);
+/* =========================================================
+   11. UTILS (Scroll Top)
+   ========================================================= */
+#scrollTop {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--yt-red);
+    color: white;
+    border: none;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    z-index: 2000;
+    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+    font-size: 1.2rem;
 }
 
 /* =========================================================
-   12. SOCIAL SHARE ICONS
+   12. RESPONSIVE DESIGN (ΤΑ ΜΑΓΙΚΑ ΓΙΑ ΚΙΝΗΤΑ/TABLET)
    ========================================================= */
-.social-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white !important;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 0.85rem;
+
+/* Laptops & Tablets (1024px & κάτω) */
+@media (max-width: 1024px) {
+    .glass-controls { max-width: 90%; padding: 30px; }
+    .elite-panel { padding: 30px 20px; border-radius: 30px; }
 }
 
-.social-icon.x-tw { background: #000000; }
-.social-icon.fb { background: #1877F2; }
-.social-icon.wa { background: #25D366; }
-
-.social-icon:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+/* Tablets Portrait & Μεγάλα Κινητά (768px & κάτω) */
+@media (max-width: 768px) {
+    .stats-board { flex-direction: column; gap: 30px; padding: 40px 20px; }
+    .inputs { flex-direction: column; gap: 15px; }
+    .input-box { width: 100%; min-width: 100%; }
+    .action-buttons { flex-direction: column; width: 100%; }
+    .jump-btn { width: 100%; height: 50px; font-size: 1.5rem; }
+    .video-grid { gap: 20px; padding: 20px 15px; }
 }
 
-/* Για να φαίνεται το X(Twitter) σε Dark Mode */
-body.dark-mode .social-icon.x-tw {
-    background: #ffffff;
-    color: #000000 !important;
+/* Μικρά Κινητά (480px & κάτω - π.χ. iPhone, Android) */
+@media (max-width: 480px) {
+    .theme-switch-wrapper { top: 12px; right: 15px; transform: scale(0.85); }
+    .main-header { padding: 12px 0; }
+    .glitch-logo { font-size: 1.5rem; }
+    .full-page-hero { min-height: 50vh; padding: 30px 15px; }
+    .reveal-text { font-size: 2.2rem; }
+    .glass-controls { padding: 20px 15px; border-radius: 25px; }
+    .neon-button { padding: 15px; font-size: 1rem; }
+    .video-grid { grid-template-columns: 1fr; gap: 20px; padding: 20px 15px; }
+    
+    .elite-panel { width: 95%; padding: 20px 15px; border-radius: 20px; margin: 20px 0 60px 0;}
+    .elite-header h2 { font-size: 1.5rem; }
+
+    /* ΕΙΔΙΚΕΣ ΡΥΘΜΙΣΕΙΣ ΓΙΑ ΤΑ ΚΟΥΜΠΙΑ ΣΤΟ ΚΙΝΗΤΟ */
+    .watch-btn, .share-container, .share-container button {
+        flex: 1 1 100% !important; /* Τα αναγκάζει να πιάνουν όλη τη γραμμή το καθένα */
+        width: 100% !important;
+        margin-bottom: 5px;
+    }
+    
+    /* Μεγαλώνουμε λίγο τα εικονίδια του Share για να πατιούνται εύκολα με το δάχτυλο */
+    .share-menu {
+        padding: 15px;
+        gap: 15px;
+        width: max-content; /* Το αποτρέπει από το να κόβεται */
+    }
+    
+    .social-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+    }
 }

@@ -49,6 +49,27 @@ function parseDurationToSeconds(duration) {
     const seconds = (parseInt(match[3]) || 0);
     return (hours * 3600) + (minutes * 60) + seconds;
 }
+// --- SHARE MENU LOGIC ---
+window.toggleShareMenu = function(button) {
+    // Κλείνουμε όλα τα άλλα μενού πρώτα
+    document.querySelectorAll('.share-menu').forEach(menu => {
+        if (menu !== button.nextElementSibling) {
+            menu.classList.remove('show');
+        }
+    });
+    // Ανοίγουμε ή κλείνουμε αυτό που πατήσαμε
+    button.nextElementSibling.classList.toggle('show');
+};
+
+// Αν πατήσουμε κάπου αλλού στη σελίδα, κλείνουν όλα τα share menus
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.share-container')) {
+        document.querySelectorAll('.share-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
+});
+
 
 
 
@@ -104,7 +125,6 @@ async function startScanning() {
 function renderVideos(videos) {
     const list = document.getElementById('videoList');
     list.innerHTML = videos.map((v, index) => {
-        // Δημιουργία Links για Share
         const shareText = encodeURIComponent(`Check out this viral hit: "${v.snippet.title}" 🔥\nTracked via @TubeTop50\n`);
         const videoUrl = encodeURIComponent(`https://youtube.com/watch?v=${v.id}`);
         const twitterShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${videoUrl}`;
@@ -124,24 +144,28 @@ function renderVideos(videos) {
                 </p>
                 <div style="display:flex; flex-direction:column; gap:15px;">
                     
-                    <!-- Views & Share Icons -->
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="color:var(--yt-red); font-weight:900;">🔥 ${Number(v.statistics.viewCount).toLocaleString()}</span>
-                        <div style="display:flex; gap:8px;">
-                            <a href="${twitterShare}" target="_blank" class="social-icon x-tw" title="Share to X"><i class="fa-brands fa-x-twitter"></i></a>
-                            <a href="${fbShare}" target="_blank" class="social-icon fb" title="Share to Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                            <a href="${whatsappShare}" target="_blank" class="social-icon wa" title="Share to WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                        </div>
+                        <span style="color:var(--yt-red); font-weight:900;">🔥 ${Number(v.statistics.viewCount).toLocaleString()} Views</span>
                     </div>
 
-                    <!-- Watch & Channel Buttons -->
-                    <div style="display:flex; gap:10px;">
-                        <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn">
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <a href="https://youtube.com/watch?v=${v.id}" target="_blank" class="watch-btn" style="flex:1; padding:10px 5px;">
                             <i class="fas fa-play"></i> WATCH
                         </a>
-                        <a href="https://youtube.com/channel/${v.snippet.channelId}" target="_blank" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color);">
+                        <a href="https://youtube.com/channel/${v.snippet.channelId}" target="_blank" class="watch-btn" style="flex:1; border-color:var(--text-color); color:var(--text-color); padding:10px 5px;">
                             <i class="fas fa-user"></i> CHANNEL
                         </a>
+                        
+                        <div class="share-container" style="flex:1;">
+                            <button onclick="toggleShareMenu(this)" class="watch-btn" style="width:100%; border-color:var(--text-color); color:var(--text-color); background:transparent; cursor:pointer; padding:10px 5px;">
+                                <i class="fas fa-share-nodes"></i> SHARE
+                            </button>
+                            <div class="share-menu">
+                                <a href="${twitterShare}" target="_blank" class="social-icon x-tw"><i class="fa-brands fa-x-twitter"></i></a>
+                                <a href="${fbShare}" target="_blank" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="${whatsappShare}" target="_blank" class="social-icon wa"><i class="fa-brands fa-whatsapp"></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,7 +186,6 @@ function renderEliteSuggestions(videos) {
     }).slice(0, 10);
 
     content.innerHTML = elite.map((v, i) => {
-        // Δημιουργία Links για Share
         const shareText = encodeURIComponent(`The #${i+1} Most Viral Video right now is "${v.snippet.title}"! 🔥\nTracked via @TubeTop50\n`);
         const videoUrl = encodeURIComponent(`https://youtube.com/watch?v=${v.id}`);
         const twitterShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${videoUrl}`;
@@ -187,11 +210,15 @@ function renderEliteSuggestions(videos) {
                         <i class="fas fa-user"></i> CHANNEL
                     </a>
                     
-                    <div style="display:flex; gap:8px; align-items:center; margin-left:10px;">
-                        <span style="font-size: 0.8rem; font-weight: 800; opacity: 0.5;">SHARE:</span>
-                        <a href="${twitterShare}" target="_blank" class="social-icon x-tw"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="${fbShare}" target="_blank" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="${whatsappShare}" target="_blank" class="social-icon wa"><i class="fa-brands fa-whatsapp"></i></a>
+                    <div class="share-container" style="flex:none;">
+                        <button onclick="toggleShareMenu(this)" class="watch-btn" style="border-color:var(--text-color); color:var(--text-color); background:transparent; padding:10px 20px; cursor:pointer;">
+                            <i class="fas fa-share-nodes"></i> SHARE
+                        </button>
+                        <div class="share-menu">
+                            <a href="${twitterShare}" target="_blank" class="social-icon x-tw"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="${fbShare}" target="_blank" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="${whatsappShare}" target="_blank" class="social-icon wa"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
